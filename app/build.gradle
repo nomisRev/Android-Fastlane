@@ -1,0 +1,114 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: "me.tatarka.retrolambda"
+apply plugin: 'kotlin-android'
+
+//to enable checkstyle and pmd
+apply from: rootProject.file('gradle/pmd.gradle')
+apply from: rootProject.file('gradle/checkstyle.gradle')
+apply from: rootProject.file('gradle/findbugs.gradle')
+apply from: rootProject.file('gradle/jacoco.gradle')
+
+// Manifest version information!
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+def versionBuild = 0
+// bump for dogfood builds, public betas, etc.
+
+def buildTime = new Date().format("dd-MM-yyyy'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
+
+//Instrumentation test generate an older jacoco version ".exec" file
+jacoco {
+    toolVersion = "0.7.2+"
+}
+
+android {
+    buildToolsVersion "23.0.2"
+    compileSdkVersion 23
+
+    defaultConfig {
+        applicationId "be.appfoundry.templateexample"
+
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode buildVersionCode(versionMajor, versionMinor, versionPatch, versionBuild)
+        versionName buildVersionName(versionMajor, versionMinor, versionPatch)
+
+        buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
+
+        testInstrumentationRunner "be.appfoundry.templateexample.CustomAndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            testCoverageEnabled true
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix " - DEBUG"
+
+            testCoverageEnabled true
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        // Uncomment this when using Kotlin or remove if Java only.
+        //main.java.srcDirs += 'src/main/kotlin'
+        //test.java.srcDirs += 'src/test/kotlin'
+        //add additional buildVariantsHere
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+////use kapt instead of apt for dagger/kotlin setup
+//kapt {
+//    generateStubs = true
+//}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile project(':core')
+
+    testCompile(libraries.junit,
+        libraries.kotlin,
+        libraries.kotlin_test,
+        libraries.robolectric)
+
+    androidTestCompile(
+        libraries.espresso,
+        libraries.espresso_runner,
+        libraries.espresso_intents,
+        libraries.support_annotations,
+    libraries.mockito)
+
+    compile(libraries.android_appcompat,
+        libraries.design_support,
+        libraries.dagger,
+        libraries.retrofit2,
+        libraries.retrofit2_gson,
+        libraries.retrofit2_rx,
+        libraries.rxjava,
+        libraries.rxandroid,
+        libraries.butterknife)
+
+    apt libraries.dagger_compiler
+    apt libraries.butterknife_compiler
+}
+
+def buildVersionName(versionMajor, versionMinor, versionPatch) {
+    return "${versionMajor}.${versionMinor}.${versionPatch}"
+}
+
+def buildVersionCode(versionMajor, versionMinor, versionPatch, versionBuild) {
+    return versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 + versionBuild
+}

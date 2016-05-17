@@ -1,0 +1,34 @@
+apply plugin: 'pmd'
+
+check.dependsOn 'pmd'
+
+task pmd(type: Pmd) {
+
+    description "Generate PMD reports for this build"
+
+    ignoreFailures true
+
+    ruleSets = [
+        "java-basic",
+        "java-braces",
+        "java-naming",
+        "java-android",
+        "java-codesize",
+        "java-design",
+        "java-finalizers",
+        "java-junit",
+        "java-optimizations",
+        "java-strictexception",
+        "java-strings",
+        "java-unusedcode"
+    ]
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+      
+      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.000559">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.000221">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: notification" time="0.277464">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: Switch to android clean lane" time="0.000441">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: gradle" time="2.634345">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: Switch to android assemble lane" time="0.000267">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="6: gradle" time="12.384837">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="7: Switch to android check lane" time="0.000174">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="8: gradle" time="7.768494">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="9: gradle" time="2.635281">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="10: gradle" time="5.625789">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="11: gradle" time="3.064518">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="12: Switch to android android_test lane" time="0.000284">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="13: gradle" time="29.345845">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="14: gradle" time="15.335548">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="15: Switch to android reports lane" time="0.000183">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="16: gradle" time="14.301573">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="17: gradle" time="13.969945">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="18: notification" time="0.263525">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

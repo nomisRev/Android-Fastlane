@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TemplateExample</string>
+    <string name="error">error</string>
+    <string name="detail_activity">Detail Activity</string>
+</resources>

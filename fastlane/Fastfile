@@ -1,0 +1,75 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Actions.md
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "1.89.0"
+
+default_platform :android
+
+platform :android do
+  before_all do
+   notification(subtitle: "Start android pipeline", message: "Ready to start fastlane")
+  end
+
+  desc "Clean build with checks, test and reports"
+  lane :build do
+    clean
+    assemble
+    check
+    android_test
+    reports
+  end
+
+  desc "clean"
+  lane :clean do
+    gradle(task: "clean")
+  end
+
+  desc "Assemble apk"
+  lane :assemble do
+    gradle(task: "assemble")
+  end
+
+  desc "Run all checks"
+  lane :check do
+    gradle(task: "lint")
+    gradle(task: "checkstyle")
+    gradle(task: "findbugs")
+    gradle(task: "pmd")
+  end
+
+  desc "Run unit tests and instrumentation (UI) test"
+  lane :android_test do
+    gradle(task: "test")
+    gradle(task: "connectedAndroidTest")
+  end
+
+  desc "Generate reports"
+  lane :reports do
+    gradle(task: "testDebugUnitTestCoverage")
+    gradle(task: "testReleaseUnitTestCoverage")
+  end
+
+  after_all do |lane|
+   notification(
+	subtitle: "Fastlane",
+	message: "Successfully finished fast lane"
+   )
+  end
+
+  error do |lane, exception|
+   notification(
+	subtitle: "Error in fast lane",
+	message: exception.message
+   )
+  end
+end
