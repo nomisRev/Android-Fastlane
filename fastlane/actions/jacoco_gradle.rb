@@ -15,7 +15,7 @@ module Fastlane
         Actions.lane_context[SharedValues::JACOCO_BUILD_TYPE] = build_type if build_type
         Actions.lane_context[SharedValues::JACOCO_FLAVOR] = flavor if flavor
 
-        Fastlane::Actions::GradleAction.run(task: gradle_task)
+        Fastlane::Actions::GradleAction.run(task: gradle_task, project_dir: '.')
       end
 
       #####################################################

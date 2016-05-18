@@ -21,8 +21,9 @@ platform :android do
   end
 
   desc "Clean assemble build with checks, test and reports"
-  lane :alpha do
-    gradle(task: "clean assemble")
+  lane :alpha do |options|
+    gradle(task: "clean")
+    gradle(task: "assemble -PbuildNumber='" + options[:buildNumber] + "'")
     
     gradle(task: "lint checkstyle findbugs pmd")
     

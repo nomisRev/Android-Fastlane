@@ -3,47 +3,52 @@
   <testsuite name="fastlane.lanes">
     
       
-      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.000563">
+      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.00043">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.000264">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.000275">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: notification" time="0.290989">
+      <testcase classname="fastlane.lanes" name="2: notification" time="0.306025">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: gradle" time="14.499548">
+      <testcase classname="fastlane.lanes" name="3: gradle" time="2.124162">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: gradle" time="10.764942">
+      <testcase classname="fastlane.lanes" name="4: gradle" time="16.961712">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: gradle" time="46.542309">
+      <testcase classname="fastlane.lanes" name="5: gradle" time="21.662543">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: jacoco_gradle" time="15.156586">
+      <testcase classname="fastlane.lanes" name="6: gradle" time="33.740255">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: jacoco_gradle" time="15.660368">
+      <testcase classname="fastlane.lanes" name="7: jacoco_gradle" time="4.551555">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="8: notification" time="0.263623">
+      <testcase classname="fastlane.lanes" name="8: jacoco_gradle" time="4.306625">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="9: notification" time="0.268798">
         
       </testcase>
     

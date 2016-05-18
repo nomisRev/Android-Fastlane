@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'kotlin-android'
+apply plugin: 'io.fabric'
 
 //to enable checkstyle and pmd
 apply from: rootProject.file('gradle/pmd.gradle')
@@ -13,8 +14,7 @@ apply from: rootProject.file('gradle/jacoco.gradle')
 def versionMajor = 1
 def versionMinor = 0
 def versionPatch = 0
-def versionBuild = 0
-// bump for dogfood builds, public betas, etc.
+def buildNumber = project.hasProperty('buildNumber') ? buildNumber as Integer : 0
 
 def buildTime = new Date().format("dd-MM-yyyy'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
 
@@ -32,8 +32,9 @@ android {
 
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode buildVersionCode(versionMajor, versionMinor, versionPatch, versionBuild)
+        versionCode buildNumber
         versionName buildVersionName(versionMajor, versionMinor, versionPatch)
+        project.ext.set("archivesBaseName", "app-" + versionName + "-" + versionCode);
 
         buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
 
@@ -84,12 +85,11 @@ dependencies {
         libraries.kotlin_test,
         libraries.robolectric)
 
-    androidTestCompile(
-        libraries.espresso,
+    androidTestCompile(libraries.espresso,
         libraries.espresso_runner,
         libraries.espresso_intents,
         libraries.support_annotations,
-    libraries.mockito)
+        libraries.mockito)
 
     compile(libraries.android_appcompat,
         libraries.design_support,
@@ -101,14 +101,12 @@ dependencies {
         libraries.rxandroid,
         libraries.butterknife)
 
+    compile(libraries.crashlytics) { transitive = true; }
+
     apt libraries.dagger_compiler
     apt libraries.butterknife_compiler
 }
 
 def buildVersionName(versionMajor, versionMinor, versionPatch) {
     return "${versionMajor}.${versionMinor}.${versionPatch}"
-}
-
-def buildVersionCode(versionMajor, versionMinor, versionPatch, versionBuild) {
-    return versionMajor * 1000 + versionMinor * 100 + versionPatch * 10 + versionBuild
 }

@@ -9,6 +9,9 @@
         android:name=".ExampleApp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="FILL_IN_YOUR_API_KEY" />
         <activity android:name=".ui.master.MasterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
