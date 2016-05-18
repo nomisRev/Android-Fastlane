@@ -6,36 +6,11 @@ sudo gem install fastlane
 ```
 # Available Actions
 ## Android
-### android build
+### android alpha
 ```
-fastlane android build
+fastlane android alpha
 ```
-Clean build with checks, test and reports
-### android clean
-```
-fastlane android clean
-```
-clean
-### android assemble
-```
-fastlane android assemble
-```
-Assemble apk
-### android check
-```
-fastlane android check
-```
-Run all checks
-### android android_test
-```
-fastlane android android_test
-```
-Run unit tests and instrumentation (UI) test
-### android reports
-```
-fastlane android reports
-```
-Generate reports
+Clean assemble build with checks, test and reports
 
 ----
 

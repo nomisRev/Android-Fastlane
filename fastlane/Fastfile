@@ -20,56 +20,23 @@ platform :android do
    notification(subtitle: "Start android pipeline", message: "Ready to start fastlane")
   end
 
-  desc "Clean build with checks, test and reports"
-  lane :build do
-    clean
-    assemble
-    check
-    android_test
-    reports
-  end
+  desc "Clean assemble build with checks, test and reports"
+  lane :alpha do
+    gradle(task: "clean assemble")
+    
+    gradle(task: "lint checkstyle findbugs pmd")
+    
+    gradle(task: "test connectedAndroidTest")
 
-  desc "clean"
-  lane :clean do
-    gradle(task: "clean")
-  end
-
-  desc "Assemble apk"
-  lane :assemble do
-    gradle(task: "assemble")
-  end
-
-  desc "Run all checks"
-  lane :check do
-    gradle(task: "lint")
-    gradle(task: "checkstyle")
-    gradle(task: "findbugs")
-    gradle(task: "pmd")
-  end
-
-  desc "Run unit tests and instrumentation (UI) test"
-  lane :android_test do
-    gradle(task: "test")
-    gradle(task: "connectedAndroidTest")
-  end
-
-  desc "Generate reports"
-  lane :reports do
-    gradle(task: "testDebugUnitTestCoverage")
-    gradle(task: "testReleaseUnitTestCoverage")
+    jacoco_gradle(build_type: "Release")
+    jacoco_gradle(build_type: "Debug")
   end
 
   after_all do |lane|
-   notification(
-	subtitle: "Fastlane",
-	message: "Successfully finished fast lane"
-   )
+   notification(subtitle: "Fastlane", message: "Successfully finished fast lane")
   end
 
   error do |lane, exception|
-   notification(
-	subtitle: "Error in fast lane",
-	message: exception.message
-   )
+   notification(subtitle: "Error in fast lane", message: exception.message)
   end
 end
