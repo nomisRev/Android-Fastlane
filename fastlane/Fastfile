@@ -1,16 +1,3 @@
-# Customise this file, documentation can be found here:
-# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
-# All available actions: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Actions.md
-# can also be listed using the `fastlane actions` command
-
-# Change the syntax highlighting to Ruby
-# All lines starting with a # are ignored when running `fastlane`
-
-# If you want to automatically update fastlane if a new version is available:
-# update_fastlane
-
-# This is the minimum version number required.
-# Update this, if you use features of a newer version
 fastlane_version "1.89.0"
 
 default_platform :android
@@ -20,17 +7,61 @@ platform :android do
    notification(subtitle: "Start android pipeline", message: "Ready to start fastlane")
   end
 
-  desc "Clean assemble build with checks, test and reports"
+  desc "Alpha release app. Run checks, test, assemble and upload to Fabric Beta"
   lane :alpha do |options|
+    build_app(buildNumber: options[:buildNumber], service: options[:service], account: options[:account])
+
+    publish_fabric_beta(api_token: options[:api_token], build_secret: options[:build_secret])
+  end
+
+  desc "Clean assemble build with checks, test and reports"
+  private_lane :build_app do |options|
+    #Clean project directory
     gradle(task: "clean")
-    gradle(task: "assemble -PbuildNumber='" + options[:buildNumber] + "'")
-    
+
+    assemble_signed_apk(buildNumber: options[:buildNumber],service: options[:service],account: options[:account],password: options[:password])
+
+    #Run lint, checkstyle, findbugs and pmd
     gradle(task: "lint checkstyle findbugs pmd")
     
+    #run tests and UI tests
     gradle(task: "test connectedAndroidTest")
 
+    #Generate jacoco coverage reports for release and debug
     jacoco_gradle(build_type: "Release")
     jacoco_gradle(build_type: "Debug")
+  end
+
+  lane :assemble_signed_apk do |options|
+    if options[:buildNumber]
+      if options[:service] && options[:account]
+        pwd = pw_from_keychain(service: options[:service], account: options[:account])
+        gradle(task: "assemble -PbuildNumber=\"" + options[:buildNumber] + "\" -PstorePassword=\"" + pwd + "\" -PkeyPassword=\"" + pwd + "\"")
+      elsif options[:password]
+        pwd = options[:password]
+        gradle(task: "assemble -PbuildNumber=\"" + options[:buildNumber] + "\" -PstorePassword=\"" + pwd + "\" -PkeyPassword=\"" + pwd + "\"")
+      else
+        UI.error("Require password to unlock keystore to sign apk")
+      end
+    else
+      UI.error("Build number is required for a signed assemble")
+    end
+  end
+
+  desc "Distribute a new Beta via Crashlytics"
+  private_lane :publish_fabric_beta do |options|
+    if options[:api_token] && options[:build_secret]
+      api_token = options[:api_token]
+      build_secret = options[:build_secret]
+    else
+      api_token = pw_from_keychain(service: "crashlytics", account: "api-key")
+      build_secret = pw_from_keychain(service: "crashlytics", account: "build-secret")
+    end
+
+    crashlytics(
+       api_token: api_token,
+       build_secret: build_secret
+       )
   end
 
   after_all do |lane|

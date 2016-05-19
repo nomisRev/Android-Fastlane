@@ -4,6 +4,8 @@ apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
+apply from: rootProject.file('gradle/apksigning.gradle')
+
 //to enable checkstyle and pmd
 apply from: rootProject.file('gradle/pmd.gradle')
 apply from: rootProject.file('gradle/checkstyle.gradle')
@@ -34,12 +36,13 @@ android {
         targetSdkVersion 23
         versionCode buildNumber
         versionName buildVersionName(versionMajor, versionMinor, versionPatch)
-        project.ext.set("archivesBaseName", "app-" + versionName + "-" + versionCode);
+        setProperty("archivesBaseName", "app-$defaultConfig.versionName-$defaultConfig.versionCode")
 
         buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
 
         testInstrumentationRunner "be.appfoundry.templateexample.CustomAndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -55,6 +58,7 @@ android {
             testCoverageEnabled true
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

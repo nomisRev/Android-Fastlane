@@ -1,6 +1,5 @@
 package be.appfoundry.templateexample.core.service;
 
-import android.accounts.NetworkErrorException;
 import be.appfoundry.core.model.GitHubRepo;
 import be.appfoundry.core.service.GithubAPI;
 import java.util.Collections;
@@ -22,6 +21,6 @@ public class MockGithubAPI implements GithubAPI {
 
     @Override
     public Observable<List<GitHubRepo>> getRepos() {
-        return throwError ? Observable.error(new NetworkErrorException("exception")) : Observable.just(repos);
+        return throwError ? Observable.error(new Exception("exception")) : Observable.just(repos);
     }
 }
