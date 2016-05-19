@@ -9,7 +9,7 @@ platform :android do
 
   desc "Alpha release app. Run checks, test, assemble and upload to Fabric Beta"
   lane :alpha do |options|
-    build_app(buildNumber: options[:buildNumber], service: options[:service], account: options[:account])
+    build_app(buildNumber: options[:buildNumber], service: options[:service], account: options[:account], password: options[:password])
 
     publish_fabric_beta(api_token: options[:api_token], build_secret: options[:build_secret])
   end
