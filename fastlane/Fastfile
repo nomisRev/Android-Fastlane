@@ -25,7 +25,8 @@ platform :android do
     gradle(task: "lint checkstyle findbugs pmd")
     
     #run tests and UI tests
-    gradle(task: "test connectedAndroidTest")
+    #gradle(task: "test connectedAndroidTest")
+    gradle(task: "test")
 
     #Generate jacoco coverage reports for release and debug
     jacoco_gradle(build_type: "Release")
