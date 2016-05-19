@@ -4,7 +4,7 @@ default_platform :android
 
 platform :android do
   before_all do
-   notification(subtitle: "Start android pipeline", message: "Ready to start fastlane")
+   #notification(subtitle: "Start android pipeline", message: "Ready to start fastlane")
   end
 
   desc "Alpha release app. Run checks, test, assemble and upload to Fabric Beta"
@@ -66,10 +66,10 @@ platform :android do
   end
 
   after_all do |lane|
-   notification(subtitle: "Fastlane", message: "Successfully finished fast lane")
+   #notification(subtitle: "Fastlane", message: "Successfully finished fast lane")
   end
 
   error do |lane, exception|
-   notification(subtitle: "Error in fast lane", message: exception.message)
+   #notification(subtitle: "Error in fast lane", message: exception.message)
   end
 end
