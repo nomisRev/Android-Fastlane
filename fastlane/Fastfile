@@ -64,10 +64,11 @@ platform :android do
       build_secret = pw_from_keychain(service: "crashlytics", account: "build-secret")
     end
 
-    crashlytics(
-       api_token: api_token,
-       build_secret: build_secret
-       )
+    unless api_token.empty? || build_secret.empty?
+       crashlytics(api_token: api_token, build_secret: build_secret)
+     else
+       UI.error("No api_token or build_secret were specified. Cannot upload to BETA.")
+    end 
   end
 
   after_all do |lane|

@@ -1,6 +1,4 @@
-def file = project.hasProperty('keyStorePath') ? new File(keyStorePath) :
-    new File("/Users/${System.getenv("USER")}/appfoundry/keystore-vault/android-fastlane/android-fastlane.jks")
-
+def file = project.hasProperty('keyStorePath') ? new File(keyStorePath) : ""
 def storePasswordProperty = project.hasProperty('storePassword') ? storePassword as String : ""
 def keyPasswordProperty = project.hasProperty('keyPassword') ? keyPassword as String : ""
 
