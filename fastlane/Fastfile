@@ -9,7 +9,8 @@ platform :android do
 
   desc "Alpha release app. Run checks, test, assemble and upload to Fabric Beta"
   lane :alpha do |options|
-    build_app(buildNumber: options[:buildNumber], service: options[:service], account: options[:account], password: options[:password])
+    build_app(buildNumber: options[:buildNumber], service: options[:service], account: options[:account],
+      password: options[:password],keystorepath: options[:keystorepath])
 
     publish_fabric_beta(api_token: options[:api_token], build_secret: options[:build_secret])
   end
@@ -19,7 +20,8 @@ platform :android do
     #Clean project directory
     gradle(task: "clean")
 
-    assemble_signed_apk(buildNumber: options[:buildNumber],service: options[:service],account: options[:account],password: options[:password])
+    assemble_signed_apk(buildNumber: options[:buildNumber],service: options[:service],account: options[:account],
+      password: options[:password],keyStorePath: options[:keyStorePath])
 
     #Run lint, checkstyle, findbugs and pmd
     gradle(task: "lint checkstyle findbugs pmd")
@@ -35,18 +37,21 @@ platform :android do
 
   lane :assemble_signed_apk do |options|
     if options[:buildNumber]
-      if options[:service] && options[:account]
-        pwd = pw_from_keychain(service: options[:service], account: options[:account])
-        gradle(task: "assemble -PbuildNumber=\"" + options[:buildNumber] + "\" -PstorePassword=\"" + pwd + "\" -PkeyPassword=\"" + pwd + "\"")
-      elsif options[:password]
-        pwd = options[:password]
-        gradle(task: "assemble -PbuildNumber=\"" + options[:buildNumber] + "\" -PstorePassword=\"" + pwd + "\" -PkeyPassword=\"" + pwd + "\"")
-      else
-        UI.error("Require password to unlock keystore to sign apk")
-      end
-    else
-      UI.error("Build number is required for a signed assemble")
+      UI.message("Since no build number was specified 0 was used")
     end
+
+    unless options[:service] && options[:account] || options[:password]
+      UI.error("Require password to unlock keystore to sign apk")
+    else options[:service] && options[:account]
+      pwd = "#{ options[:service] && options[:account] ? pw_from_keychain(service: options[:service], account: options[:account]) : "" }"
+      pwd = "#{ options[:password] && pwd.empty? ? options[:password] : pwd }"
+    end
+
+    assemble_task = "assemble -PbuildNumber=\"#{ options[:buildNumber] ? options[:buildNumber] : "0" }\" " +
+      "#{ !pwd.empty? ? "-PstorePassword=\"" + pwd + "\" -PkeyPassword=\"" + pwd + "\" " : "" }" +
+      "#{ options[:keyStorePath] ? "-PkeyStorePath=\"" + options[:keyStorePath] + "\"" : "" }"
+
+    gradle(task: assemble_task)
   end
 
   desc "Distribute a new Beta via Crashlytics"
