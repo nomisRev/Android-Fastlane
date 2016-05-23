@@ -15,22 +15,18 @@ module Fastlane
       sign_cmd << ["-keystore #{params[:keystore_path]}" ] if params[:keystore_path]
       sign_cmd << ["#{params[:input_apk_path]}"] if params[:input_apk_path]
       sign_cmd << ["#{params[:alias]}"] if params[:alias]
-
-      unless params[:signed_apk_path].nil? || params[:signed_apk_path].empty?
-        sign_cmd << ["-signedjar #{params[:signed_apk_path]}" ] if params[:signed_apk_path]
-      else
-        if !params[:input_apk_path].nil? && params[:input_apk_path].include?("unsigned")
-          sign_cmd << ["-signedjar #{params[:input_apk_path].gsub('unsigned', 'signed')}"]
-        end
-      end
-
       sign_cmd << ["-keypass #{params[:keypass] ? params[:keypass] : params[:storepass]}"] if params[:keypass] || params[:storepass]
       sign_cmd << ["-storepass #{params[:storepass]}"] if params[:storepass]
       sign_cmd << ["-tsa #{params[:tsa]}"] if params[:tsa]
-    
-      Fastlane::Actions.sh(sign_cmd, log: true)
 
+      if params[:signed_apk_path]
+        sign_cmd << ["-signedjar #{params[:signed_apk_path]}" ]
+      elsif params[:input_apk_path].include?("unsigned")
+        sign_cmd << ["-signedjar #{params[:input_apk_path].gsub('unsigned', 'signed')}"]
       end
+
+      Fastlane::Actions.sh(sign_cmd, log: true)
+    end
 
       #####################################################
       # @!group Documentation
