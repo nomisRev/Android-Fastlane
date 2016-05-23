@@ -13,7 +13,7 @@ module Fastlane
 
       sign_cmd = ["jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1"]
       sign_cmd << ["-keystore #{params[:keystore_path]}" ] if params[:keystore_path]
-      sign_cmd << [["#{params[:input_apk_path]}"]] if params[:input_apk_path]
+      sign_cmd << ["#{params[:input_apk_path]}"] if params[:input_apk_path]
       sign_cmd << ["#{params[:alias]}"] if params[:alias]
 
       unless params[:signed_apk_path].nil? || params[:signed_apk_path].empty?
