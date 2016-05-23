@@ -27,7 +27,7 @@ module Fastlane
         sign_cmd << ["-signedjar #{params[:signed_apk_path]}" ]
         Actions.lane_context[SharedValues::SIGNED_APK_PATH] = "#{params[:signed_apk_path]}"
       elsif params[:input_apk_path].include?("unsigned")
-        sign_cmd << ["-signedjar #{params[:input_apk_path].gsub('unsigned', 'signed')}"]
+        sign_cmd << ["-signedjar #{params[:input_apk_path].gsub('-unsigned', '')}"]
         Actions.lane_context[SharedValues::SIGNED_APK_PATH] = "#{params[:input_apk_path].gsub('-unsigned', '')}"
       end
 
