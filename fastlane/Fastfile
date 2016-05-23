@@ -15,8 +15,22 @@ platform :android do
     publish_fabric_beta(api_token: options[:api_token], build_secret: options[:build_secret])
   end
 
+  lane :gradle_sign_apk do
+    assemble_signed_apk(buildNumber: '999',service: 'crashlytics',account: 'android-signer',
+      password: 'android-fastlane-signer',keyStorePath: '../keystore-vault/android-fastlane/android-fastlane.jks')
+  end
+
+  lane :sign_apk do
+    #gradle(task: "clean assemble")
+
+    #sign_apk(keystore_path: '../keystore-vault/android-fastlane-keytool/android-fastlane-keytool.keystore',
+    #  input_apk_path: 'app/build/outputs/apk/app-1.0.0-0-release-unsigned.apk', alias: 'android-fastlane', storepass: 'abc123!', tsa: 'http://timestamp.comodoca.com/rfc316')
+    sign_apk(keystore_path: '../keystore-vault/android-fastlane-keytool/android-fastlane-keytool.keystore',
+      alias: 'android-fastlane', storepass: 'abc123!', tsa: 'http://timestamp.comodoca.com/rfc316')
+  end
+
   desc "Clean assemble build with checks, test and reports"
-  private_lane :build_app do |options|
+  lane :build_app do |options|
     #Clean project directory
     gradle(task: "clean")
 

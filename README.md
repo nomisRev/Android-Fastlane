@@ -9,21 +9,10 @@
 
 ## Creating your own actions
 
-**Warning there is still a bug in GradleAction, I fixed this and made a pull request but this is still pending. A workaround is also explained below.**
+Writing your own actions is out of the scope of this article since it's basically just ruby scripting. It is fairly straight forward if you know basic scripting and use other scripts as inspiration.
 
-* Creating your own fastlane action can be done by running `fastlane new_action`
-* Fastlane will then ask you for a name (Must be lower case, and use a '_' between words. Do not use '.')
-* Let's create a simple action and let's call it `jacoco_report`. As you could have guessed we'll be using this fastlane action to invoke a gradle script to generate jacoco coverage report
-* You can now find a file in /fastlane/actions/jacoco_report.rb
+In this repo you can find a custom action `jacoco_gradle` that triggers the custom gradle task defined in `jacoco.gradle`.
 
-
+**There is a bug in GradleAction, and the current workaround is to specifically add `project_dir: "."` when invoking `.run`. A pull request has been made for this issue.**
 
  ## Creating a pipeline with Fastlane.
-
- * Let's say we want have following things in our pipeline
-     1. `gradle clean` we want to do this to make sure we start with a clean project in order to prevent weird bugs due to old files.
-     2. `gradle assemble` in order to generate the apks.
-     3. `gradle lint checkstyle findbugs pmd` in order to run our static analyser tools and generate their reports.
-     4. `gradle test` run our unit tests
-     5. `gradle connectedAndroidTest` run our instrumentation (UI) tests
-     6. `gradle `

@@ -11,6 +11,21 @@ sudo gem install fastlane
 fastlane android alpha
 ```
 Alpha release app. Run checks, test, assemble and upload to Fabric Beta
+### android gradle_sign_apk
+```
+fastlane android gradle_sign_apk
+```
+
+### android sign_apk
+```
+fastlane android sign_apk
+```
+
+### android build_app
+```
+fastlane android build_app
+```
+Clean assemble build with checks, test and reports
 ### android assemble_signed_apk
 ```
 fastlane android assemble_signed_apk
