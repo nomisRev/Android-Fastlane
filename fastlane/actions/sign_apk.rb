@@ -31,6 +31,8 @@ module Fastlane
         Actions.lane_context[SharedValues::SIGNED_APK_PATH] = "#{params[:input_apk_path].gsub('-unsigned', '')}"
       end
 
+      Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH] = Actions.lane_context[SharedValues::SIGNED_APK_PATH]
+
       Fastlane::Actions.sh(sign_cmd, log: true)
     end
 
