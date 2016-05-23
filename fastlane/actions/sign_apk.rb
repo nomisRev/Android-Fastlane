@@ -9,7 +9,11 @@ module Fastlane
       
       unless params[:input_apk_path]
         UI.user_error!("Couldn't find '*release-unsigned.apk' file at path 'app/build/outputs/apk/'")
-      end 
+      end
+
+      unless params[:keystore_path]
+        UI.user_error("Need keystore in order to sign apk")
+      end
 
       sign_cmd = ["jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1"]
       sign_cmd << ["-keystore #{params[:keystore_path]}" ] if params[:keystore_path]
@@ -21,8 +25,10 @@ module Fastlane
 
       if params[:signed_apk_path]
         sign_cmd << ["-signedjar #{params[:signed_apk_path]}" ]
+        Actions.lane_context[SharedValues::SIGNED_APK_PATH] = "#{params[:signed_apk_path]}"
       elsif params[:input_apk_path].include?("unsigned")
         sign_cmd << ["-signedjar #{params[:input_apk_path].gsub('unsigned', 'signed')}"]
+        Actions.lane_context[SharedValues::SIGNED_APK_PATH] = "#{params[:input_apk_path].gsub('-unsigned', '')}"
       end
 
       Fastlane::Actions.sh(sign_cmd, log: true)
@@ -54,10 +60,7 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :keystore_path,
                                        env_name: "KEYSTORE_PATH",
                                        description: "Path to java keystore",
-                                       optional: true,
-                                       verify_block: proc do |value|
-                                         UI.user_error!("Couldn't find keystore file at path '#{value}'") unless File.exist?(value)
-                                       end),
+                                       optional: true),
           FastlaneCore::ConfigItem.new(key: :alias,
                                        env_name: "ALIAS",
                                        description: "The alias of 
