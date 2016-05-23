@@ -16,7 +16,7 @@ platform :android do
   end
 
   desc "Clean assemble build with checks, test and reports"
-  lane :build_app do |options|
+  private_lane :build_app do |options|
     #Clean project directory
     gradle(task: "clean")
 
