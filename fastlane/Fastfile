@@ -9,24 +9,10 @@ platform :android do
 
   desc "Alpha release app. Run checks, test, assemble and upload to Fabric Beta"
   lane :alpha do |options|
-    build_app(buildNumber: options[:buildNumber], service: options[:service], account: options[:account],
-      password: options[:password],keyStorePath: options[:keyStorePath])
+    build_app(buildNumber: options[:buildNumber], input_apk_path: options[:input_apk_path], alias: options[:alias],
+      storepass: options[:storepass],keystore_path: options[:keystore_path], tsa: options[:tsa], signed_apk_path: options[:signed_apk_path], keypass: options[:keypass])
 
     publish_fabric_beta(api_token: options[:api_token], build_secret: options[:build_secret])
-  end
-
-  lane :gradle_sign_apk do
-    assemble_signed_apk(buildNumber: '999',service: 'crashlytics',account: 'android-signer',
-      password: 'android-fastlane-signer',keyStorePath: '../keystore-vault/android-fastlane/android-fastlane.jks')
-  end
-
-  lane :sign_apk do
-    #gradle(task: "clean assemble")
-
-    #sign_apk(keystore_path: '../keystore-vault/android-fastlane-keytool/android-fastlane-keytool.keystore',
-    #  input_apk_path: 'app/build/outputs/apk/app-1.0.0-0-release-unsigned.apk', alias: 'android-fastlane', storepass: 'abc123!', tsa: 'http://timestamp.comodoca.com/rfc316')
-    sign_apk(keystore_path: '../keystore-vault/android-fastlane-keytool/android-fastlane-keytool.keystore',
-      alias: 'android-fastlane', storepass: 'abc123!', tsa: 'http://timestamp.comodoca.com/rfc316')
   end
 
   desc "Clean assemble build with checks, test and reports"
@@ -34,8 +20,10 @@ platform :android do
     #Clean project directory
     gradle(task: "clean")
 
-    assemble_signed_apk(buildNumber: options[:buildNumber],service: options[:service],account: options[:account],
-      password: options[:password],keyStorePath: options[:keyStorePath])
+    assemble(buildNumber: options[:buildNumber])
+
+    sign_apk(keystore_path: options[:keystore_path], input_apk_path: options[:input_apk_path],
+      alias: options[:alias], storepass: options[:storepass], tsa: options[:tsa], signed_apk_path: options[:signed_apk_path], keypass: options[:keypass])
 
     #Run lint, checkstyle, findbugs and pmd
     gradle(task: "lint checkstyle findbugs pmd")
@@ -49,24 +37,33 @@ platform :android do
     jacoco_gradle(build_type: "Debug")
   end
 
-  lane :assemble_signed_apk do |options|
+  private_lane :assemble do |options|
     if options[:buildNumber]
       UI.message("Since no build number was specified 0 was used")
     end
 
-    unless options[:service] && options[:account] || options[:password]
-      UI.error("Require password to unlock keystore to sign apk")
-    else options[:service] && options[:account]
-      pwd = "#{ options[:service] && options[:account] ? pw_from_keychain(service: options[:service], account: options[:account]) : "" }"
-      pwd = "#{ options[:password] && pwd.empty? ? options[:password] : pwd }"
-    end
-
-    assemble_task = "assemble -PbuildNumber=\"#{ options[:buildNumber] ? options[:buildNumber] : "0" }\" " +
-      "#{ !pwd.empty? ? "-PstorePassword=\"" + pwd + "\" -PkeyPassword=\"" + pwd + "\" " : "" }" +
-      "#{ options[:keyStorePath] ? "-PkeyStorePath=\"" + options[:keyStorePath] + "\"" : "" }"
-
+    assemble_task = "assemble -PbuildNumber=\"#{ options[:buildNumber] ? options[:buildNumber] : "0" }\""
     gradle(task: assemble_task)
   end
+
+  #lane :assemble_signed_apk do |options|
+  #  if options[:buildNumber]
+  #    UI.message("Since no build number was specified 0 was used")
+  #  end
+  #
+  #  unless options[:service] && options[:account] || options[:password]
+  #    UI.error("Require password to unlock keystore to sign apk")
+  #  else options[:service] && options[:account]
+  #    pwd = "#{ options[:service] && options[:account] ? pw_from_keychain(service: options[:service], account: options[:account]) : "" }"
+  #    pwd = "#{ options[:password] && pwd.empty? ? options[:password] : pwd }"
+  #  end
+  #
+  #  assemble_task = "assemble -PbuildNumber=\"#{ options[:buildNumber] ? options[:buildNumber] : "0" }\" " +
+  #    "#{ !pwd.empty? ? "-PstorePassword=\"" + pwd + "\" -PkeyPassword=\"" + pwd + "\" " : "" }" +
+  #    "#{ options[:keyStorePath] ? "-PkeyStorePath=\"" + options[:keyStorePath] + "\"" : "" }"
+  #
+  #  gradle(task: assemble_task)
+  #end
 
   desc "Distribute a new Beta via Crashlytics"
   private_lane :publish_fabric_beta do |options|
