@@ -44,7 +44,7 @@ Execute using `fastlane [lane_name]`
 
 * In order to sign an apk we need an keystore so let's generate one.
  
-![Keytool](keytool.png)
+![Keytool](keytool-resize.png)
 
 * So when we want to sign the apk we need to pass the path to the keystore, the keypass, the storepass and the alias of the key. Equivalent to `jarsigner` if keypass = storepass than passing the storepass is enough. `storepass:'abc123!' keypass:'abc456!' keystore_path:'android.keystore' alias:'android-fastlane'`
 
