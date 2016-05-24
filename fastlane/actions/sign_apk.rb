@@ -7,13 +7,9 @@ module Fastlane
     class SignApkAction < Action
       def self.run(params)
       
-      unless params[:input_apk_path]
-        UI.user_error!("Couldn't find '*release-unsigned.apk' file at path 'app/build/outputs/apk/'")
-      end
+      UI.user_error!("Couldn't find '*release-unsigned.apk' file at path 'app/build/outputs/apk/'") unless params[:input_apk_path]
 
-      unless params[:keystore_path]
-        UI.user_error("Need keystore in order to sign apk")
-      end
+      UI.user_error("Need keystore in order to sign apk") unless params[:keystore_path]
 
       sign_cmd = ["jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1"]
       sign_cmd << ["-keystore #{params[:keystore_path]}" ] if params[:keystore_path]
